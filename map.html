@@ -92,8 +92,12 @@
 	}
 
 	function getColor(d) {
-	    return d == 0  ? "#00A9CE" :
-		d == 1  ? "#D22630" :
+	    return d == 0  ? "#ffffbf" :
+		d <= 0.5  ? "#f1eef6" :
+		d <= 1.5  ? "#bdc9e1" :
+		d <= 3.0  ? "#74a9cf" :
+		d <= 4.5  ? "#2b8cbe" :
+		d >  4.5  ? "#045a8d" :
 		"#939393";
 	}
 	// Colours selected to be maximum contrast by this tool:
@@ -104,7 +108,7 @@
 	}
 
 	function getRadius() {
-	    return 4.5
+	    return 6
 	}
 
 	var cykel = new L.LayerGroup();

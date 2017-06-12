@@ -20,12 +20,10 @@ weather <- function(lat, long){
                   df2 <- data.frame(time = time, temp = temp, wd = wd, ws = ws, pmin = pmin, pmax = pmax, gust = gust)
                   return(df2)
     }
-
 ## Calculate the times for a pace and start_time
 times <- function(t0,
                   pace) {
     df <- read.csv("coordinates.csv", stringsAsFactors = FALSE)
-
     df$hours <- df$distance/pace
     df$time = t0 + (df$hours*60*60)
     return(df)
@@ -63,7 +61,14 @@ pts <- map_format(df)
 path_to_data <- svamap::write_data(pts)
 ## Plot them on a map:
 svamap::write_page(data = path_to_data,
-                   path = "~/Desktop/",
+                   path = "~/Desktop",
                    owntemplate = "map.html",
                    overwrite = TRUE,
                    browse = FALSE,)
+## temp <- readLines("~/.epi-cloudftp_credentials")
+## cred <- paste0("ftp://", temp[2], ":", temp[3], "@", temp[1], "/vattern/830")
+## svamap::write_page(data = path_to_data,
+##                    ftp = cred,
+##                    owntemplate = "map.html",
+##                    overwrite = TRUE,
+##                    browse = FALSE,)

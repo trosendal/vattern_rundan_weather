@@ -65,11 +65,16 @@ svamap::write_page(data = path_to_data,
                    owntemplate = "map.html",
                    overwrite = TRUE,
                    browse = FALSE,)
+
+
+
+
+temp <- readLines("~/.epi-cloudftp_credentials")
+cred <- paste0("ftp://", temp[2], ":", temp[3], "@", temp[1], "/vattern/830/")
 files <- list.files("~/Desktop/vattern/830/map/", full.names = TRUE)
 for(i in files) {
-    file.rename(i, sub("/map/", "", i))
+    ftpUpload(i, paste0(cred, basename(i)))
 }
-file.remove("~/Desktop/vattern/830/map/")
 df <- vattern_pred(start = as.POSIXct("2017-06-16 19:38:00 CEST", tz = "Europe/Stockholm"),
                    pace = 32)
 pts <- map_format(df)
@@ -81,15 +86,9 @@ svamap::write_page(data = path_to_data,
                    owntemplate = "map.html",
                    overwrite = TRUE,
                    browse = FALSE,)
+temp <- readLines("~/.epi-cloudftp_credentials")
+cred <- paste0("ftp://", temp[2], ":", temp[3], "@", temp[1], "/vattern/930/")
 files <- list.files("~/Desktop/vattern/930/map/", full.names = TRUE)
 for(i in files) {
-    file.rename(i, sub("/map/", "", i))
+    ftpUpload(i, paste0(cred, basename(i)))
 }
-file.remove("~/Desktop/vattern/930/map/")
-## temp <- readLines("~/.epi-cloudftp_credentials")
-## cred <- paste0("ftp://", temp[2], ":", temp[3], "@", temp[1], "/vattern/830")
-## svamap::write_page(data = path_to_data,
-##                    ftp = cred,
-##                    owntemplate = "map.html",
-##                    overwrite = TRUE,
-##                    browse = FALSE,)

@@ -34,7 +34,7 @@ vattern_pred <- function(start,
     df <- times(start, pace)
     df3 <- do.call("rbind", lapply(seq_len(nrow(df)), function(x){
         df2 <- weather(df[x,]$lat, df[x,]$long)
-        df2 <- df2[order(abs(df2$time - df[x,]$time)) == 1,]
+        df2 <- df2[which(min(as.numeric(abs(df2$time-df[x,]$time))) == as.numeric(abs(df2$time-df[x,]$time)))[1],]
         names(df2)[names(df2) == "time"] <- "weather_time"
         return(df2)
     }))
@@ -61,10 +61,31 @@ pts <- map_format(df)
 path_to_data <- svamap::write_data(pts)
 ## Plot them on a map:
 svamap::write_page(data = path_to_data,
-                   path = "~/Desktop",
+                   path = "~/Desktop/vattern/830/",
                    owntemplate = "map.html",
                    overwrite = TRUE,
                    browse = FALSE,)
+files <- list.files("~/Desktop/vattern/830/map/", full.names = TRUE)
+for(i in files) {
+    file.rename(i, sub("/map/", "", i))
+}
+file.remove("~/Desktop/vattern/830/map/")
+df <- vattern_pred(start = as.POSIXct("2017-06-16 19:38:00 CEST", tz = "Europe/Stockholm"),
+                   pace = 32)
+pts <- map_format(df)
+## Write the points to json
+path_to_data <- svamap::write_data(pts)
+## Plot them on a map:
+svamap::write_page(data = path_to_data,
+                   path = "~/Desktop/vattern/930/",
+                   owntemplate = "map.html",
+                   overwrite = TRUE,
+                   browse = FALSE,)
+files <- list.files("~/Desktop/vattern/930/map/", full.names = TRUE)
+for(i in files) {
+    file.rename(i, sub("/map/", "", i))
+}
+file.remove("~/Desktop/vattern/930/map/")
 ## temp <- readLines("~/.epi-cloudftp_credentials")
 ## cred <- paste0("ftp://", temp[2], ":", temp[3], "@", temp[1], "/vattern/830")
 ## svamap::write_page(data = path_to_data,

@@ -42,11 +42,23 @@ vattern_pred <- function(start,
 }
 ## Format the information neatly for presentation:
 map_format <- function(df){
+    df$direction <- round(df$wd/45, 0)
+    df$direction <- factor(df$direction,
+                           levels = 0:8,
+                           labels = c("Norr", "Norröst",
+                                      "Öst", "Sydöst" ,
+                                      "Söder", "Sydväst",
+                                      "Väster", "Nordväst",
+                                      "Norr2"))
+    df$direction <- as.character(df$direction)
+    df$direction[df$direction == "Norr2"] <- "Norr"
     df$popup <- paste0("Du är i ", df$Place,
                        "<br>Klockan: ", df$time,
                        "<br>Det är ", df$temp, "C",
-                       "<br>Det blåser ", df$ws, "(", df$gust, ") ", "från ", df$wd,
-                       "<br>Nederbörd från ", df$pmin, " till ", df$pmax, " mm/t")
+                       "<br>Det blåser ", df$ws, "m/s(", df$gust, "m/s byvind) ", "från ", df$direction, " ",
+                       "<br>Nederbörd från ", df$pmin, " till ", df$pmax, " mm/t",
+                       "<br><br>Den närmaste väderprognosen är från ", df$weather_time,
+                       "<br>Uppdaterad ", Sys.time())
     pts <- SpatialPointsDataFrame(SpatialPoints(cbind(df$long, df$lat)), df)
     return(pts)
 }
@@ -65,10 +77,6 @@ svamap::write_page(data = path_to_data,
                    owntemplate = "map.html",
                    overwrite = TRUE,
                    browse = FALSE,)
-
-
-
-
 temp <- readLines("~/.epi-cloudftp_credentials")
 cred <- paste0("ftp://", temp[2], ":", temp[3], "@", temp[1], "/vattern/830/")
 files <- list.files("~/Desktop/vattern/830/map/", full.names = TRUE)

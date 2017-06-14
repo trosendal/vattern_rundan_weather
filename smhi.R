@@ -79,7 +79,6 @@ svamap::write_page(data = path_to_data,
                    browse = FALSE,)
 file.copy("vattern_poi.js", "~/Desktop/vattern/830/map/", overwrite = TRUE)
 file.copy("vattern_track.js", "~/Desktop/vattern/830/map/", overwrite = TRUE)
-
 temp <- readLines("~/.epi-cloudftp_credentials")
 cred <- paste0("ftp://", temp[2], ":", temp[3], "@", temp[1], "/vattern/830/")
 files <- list.files("~/Desktop/vattern/830/map/", full.names = TRUE)
@@ -97,6 +96,8 @@ svamap::write_page(data = path_to_data,
                    owntemplate = "map.html",
                    overwrite = TRUE,
                    browse = FALSE,)
+file.copy("vattern_poi.js", "~/Desktop/vattern/930/map/", overwrite = TRUE)
+file.copy("vattern_track.js", "~/Desktop/vattern/930/map/", overwrite = TRUE)
 temp <- readLines("~/.epi-cloudftp_credentials")
 cred <- paste0("ftp://", temp[2], ":", temp[3], "@", temp[1], "/vattern/930/")
 files <- list.files("~/Desktop/vattern/930/map/", full.names = TRUE)

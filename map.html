@@ -65,6 +65,8 @@
     <div id="map">
       <script src="leaflet.js"></script>
       <script src="data.js"></script>
+      <script src="vattern_track.js"></script>
+      <script src="vattern_poi.js"></script>
       <script>
 
 	var streets = L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
@@ -108,7 +110,7 @@
 	}
 
 	function getRadius() {
-	    return 6
+	    return 10
 	}
 
 	var cykel = new L.LayerGroup();
@@ -129,6 +131,27 @@
 	    }
 	}).addTo(cykel);
 
+	var route = new L.LayerGroup();
+	L.geoJson(track).addTo(route);
+
+	var depots = new L.LayerGroup();
+	L.geoJson(depot_points, {
+	    style: function (feature) {
+		return feature.proporties;
+	    },
+	    onEachFeature: onEachPolygon,
+	    pointToLayer: function (feature, latlng) {
+		return L.circleMarker(latlng, {
+		    radius: 4,
+		    fillColor: "#008000",
+		    color: "#808080",
+		    weight: 1,
+		    opacity: 0.8,
+		    fillOpacity: 0.8
+		});
+	    }
+	}).addTo(depots);
+
 	var baseLayers = {
 	    "Terräng": topo,
 	    "Vägkarta": streets,
@@ -136,14 +159,16 @@
 	};
 
 	var overlays = {
-	    "Route": cykel
+	    "Prognospunkter": cykel,
+	    "Bansträckning": route,
+	    "Depot": depots
 	};
 
 	var map = L.map('map', {
 	    center: [58.0, 14.5],
 	    zoom: 8,
 	    maxBounds: [[54,4],[70,31]],
-	    layers: [streets, cykel]
+	    layers: [streets, cykel, route, depots]
 	});
 
 	// Show linkto github project

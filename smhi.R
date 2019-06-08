@@ -1,11 +1,26 @@
 source("functions.R")
+source("direction.R")
 ##
 ## Get the race_times/weather info and format it:
 df <- vattern_pred(start = as.POSIXct("2019-06-14 19:50:00 CEST", tz = "Europe/Stockholm"),
                    pace = 38.5)
 pts <- map_format(df)
+
+index <- unlist(lapply(routepts$cumdist/1000, function(x){
+    dist <- abs(pts$distance - x)
+    which(dist == min(dist))
+}))
+routepts$ws <- pts$ws[index]
+routepts$wd <- pts$wd[index]
+## Rotate wind direction to be bearing scale:
+routepts$wd <- ifelse(routepts$wd <= 180, routepts$wd + 180, routepts$wd - 180)
+
+routepts$windgain <- (1 - diff.bearing(routepts$direction, routepts$wd) / 90) * routepts$ws
+library(viridis)
+routepts$col <- viridis(50)[as.numeric(cut(routepts$windgain, 50))]
+
 ## Write the points to json
-path_to_data <- svamap::write_data(pts)
+path_to_data <- svamap::write_data(list(pts, routepts))
 ## Plot them on a map:
 svamap::write_page(data = path_to_data,
                    path = "~/Desktop/vattern/730",

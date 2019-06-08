@@ -152,6 +152,24 @@
 	    }
 	}).addTo(depots);
 
+        var wind = new L.LayerGroup();
+	L.geoJson(data2, {
+	    style: function (feature) {
+		return feature.proporties;
+	    },
+	    onEachFeature: onEachPolygon,
+	    pointToLayer: function (feature, latlng) {
+		return L.circleMarker(latlng, {
+		    radius: 4,
+		    fillColor: feature.properties.col,
+		    color: feature.properties.col,
+		    weight: 1,
+		    opacity: 0.8,
+		    fillOpacity: 0.8
+		});
+	    }
+	}).addTo(wind);
+
 	var baseLayers = {
 	    "Terräng": topo,
 	    "Vägkarta": streets,
@@ -161,7 +179,8 @@
 	var overlays = {
 	    "Prognospunkter": cykel,
 	    "Bansträckning": route,
-	    "Depåer": depots
+	    "Depåer": depots,
+            "Vind": wind
 	};
 
 	var map = L.map('map', {

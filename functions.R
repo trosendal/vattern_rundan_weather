@@ -60,7 +60,9 @@ map_format <- function(df){
                        "<br>Nederbörd från ", df$pmin, " till ", df$pmax, " mm/t",
                        "<br><br>Den närmaste väderprognosen är från ", df$weather_time,
                        "<br>Uppdaterad ", Sys.time())
-    pts <- SpatialPointsDataFrame(SpatialPoints(cbind(df$long, df$lat)), df)
+    pts <- SpatialPointsDataFrame(coords = cbind(df$long, df$lat),
+                                  data = df,
+                                  proj4string = CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"))
     return(pts)
 }
 mydist <- function(x1, y1, x2, y2) {
@@ -93,4 +95,8 @@ myslope <- function(x1, y1, z1, x2, y2, z2) {
     degslope <- asin(rise/distance) * 180/pi
     percslope <- 100 * (rise/run)
     percslope
+}
+diff.bearing <- function(b1, b2) {
+    angle <- abs(b2 - b1)
+    abs(angle - as.numeric(angle > 180) * 360)
 }

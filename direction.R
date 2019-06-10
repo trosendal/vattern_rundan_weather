@@ -17,7 +17,6 @@ for(i in 2:nrow(pts)) {
     pts$slope[i] <- myslope(a$X1, a$X2, a$elevation, b$X1, b$X2, b$elevation)
 }
 pts$cumdist <- cumsum(pts$dist)
-pts$dirsmooth <- ma(pts$direction, 10, 10)
 routepts <- SpatialPointsDataFrame(coords = cbind(pts$long, pts$lat),
                                    proj4string = CRS(proj4string(routegeo)),
                                    data = pts)
